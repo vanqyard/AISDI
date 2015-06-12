@@ -1,0 +1,13 @@
+3
+"Metro Pole Mokotowskie"
+"Pl. Konstytucji"
+"Metro Pole Mokotowskie" "Nowowiejska"            8 6
+"Nowowiejska"            "Koszykowa"              2 1
+"Nowowiejska"            "Metro Pole Mokotowskie" 7 0
+"Koszykowa"              "Pl. Konstytucji"        0 4
+"Pl. Konstytucji"        "Koszykowa"              0 5
+"Nowowiejska"            "Pl. Politechniki"       1 0
+"Pl. Politechniki"       "Metro Politechnika"     1 0
+"Metro Politechnika"     "Pl. Konstytucji"        0 1
+"Metro Politechnika"     "Pl. Zbawiciela"         1 0
+"Pl. Zbawiciela"         "Pl. Konstytucji"        1 1
