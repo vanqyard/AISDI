@@ -33,11 +33,7 @@ ALL RIGHTS RESERVED
 
 #include <iostream>
 
-#ifdef _SUNOS
-#include "/materialy/AISDI/liniowe/ListMap.h"
-#else
 #include "ListMap.h"
-#endif
 
 //////////////////////////////////////////////////////////////////////////////
 // ListMap and ListMap::iterator methods
@@ -45,67 +41,80 @@ ALL RIGHTS RESERVED
 
 ListMap::ListMap()
 {
-   first = NULL;
+   first = new Node(std::make_pair(0," "));
+   first->next = first;
+   first->prev = first;
 };
 
 ListMap::ListMap( const ListMap& m )
 {
-   ///@todo Zaimplementowaæ metode
+	///@todo ZaimplementowaÄ‡ metode
+	//first = NULL;
+	//for(const_iterator it = m.begin(); it != m.end(); ++it)
+	//	m.insert();
 };
 
 ListMap::~ListMap()
 {
-   clear();
+	//clear();
 };
 
 // Wstawienie elementu do mapy.
-// @returns Para, której komponent bool jest równy true gdy wstawienie zosta³o
-//          dokonane, równy false gdy element identyfikowany przez klucz
-//          ju¿ istnia³ w mapie. Iterator ustawiony jest na ten wstawiony
-//          lub istniej¹cy ju¿ w mapie element.
+// @returns Para, ktÃ³rej komponent bool jest rÃ³wny true gdy wstawienie zostaÅ‚o
+//          dokonane, rÃ³wny false gdy element identyfikowany przez klucz
+//          juÅ¼ istniaÅ‚ w mapie. Iterator ustawiony jest na ten wstawiony
+//          lub istniejÄ…cy juÅ¼ w mapie element.
 std::pair<ListMap::iterator, bool> ListMap::insert(const std::pair<Key, Val>& entry)
 {
-   ///@todo Uzupe³niæ kod
-   iterator i;
-   for(i=begin(); i!=end(); ++i)
-   {
-      if(i->first==entry.first)
-        return std::make_pair(i, (bool)false);
-   }
-        return std::make_pair(i, (bool)false);
+	///@todo UzupeÅ‚niÄ‡ kod
+	iterator i;
+	for(i=begin(); i!=end(); ++i)
+	{
+		if(i->first==entry.first)
+			return std::make_pair(i, (bool)false);
+	}
+	
+	Node* new_node = new Node(entry);
+	first->next->prev = new_node;
+	new_node->next = first->next;
+	new_node->prev = first;
+	first->next = new_node;
+	return std::make_pair(iterator(new_node), true);
+	
+	//return std::make_pair(i, (bool)false);
 }
 
 // Wstawienie elementu do mapy.
-// Matoda zak³ada, ¿e w mapie nie wystêpuje element identyfikowany przez key
+// Matoda zakÅ‚ada, Å¼e w mapie nie wystÃªpuje element identyfikowany przez key
 ListMap::iterator ListMap::unsafe_insert(const std::pair<Key, Val>& entry)
 {
-   ///@todo Uzupe³niæ kod
+   ///@todo UzupeÅ‚niÃ¦ kod
    assert(0);
    return iterator(first);
 }
 
-// Zwraca iterator addresuj¹cy element w mapie dla którego klucz jest równy
+// Zwraca iterator addresujÄ…cy element w mapie dla ktÃ³rego klucz jest rÃ³wny
 // szukanemu kluczowi lub element za ostatnim gdy szukanego klucza brak w mapie.
 ListMap::iterator ListMap::find(const Key& k)
 {
-   ///@todo Zaimplementowaæ metode
+   ///@todo ZaimplementowaÃ¦ metode
    assert(0);
    return end();
 }
 
 ListMap::const_iterator ListMap::find(const Key& k) const
 {
-   ///@todo Zaimplementowaæ metode
+   ///@todo ZaimplementowaÃ¦ metode
    assert(0);
    return end();
 }
 
-// Udostêpnia wartoœæ powi¹zan¹ z kluczem key. Wstawia element do mapy jeœli
-// nie istnia³.
-// @returns Referencje do wartoœci powi¹zanej z kluczem.
+// UdostÃªpnia wartoÂœÃ¦ powiÄ…zanÄ… z kluczem key. Wstawia element do mapy jeÂœli
+// nie istniaÅ‚.
+// @returns Referencje do wartoÂœci powiÄ…zanej z kluczem.
 ListMap::Val& ListMap::operator[](const Key& k)
 {
-   ///@todo Zaimplementowaæ metode
+   ///@todo ZaimplementowaÃ¦ metode
    assert(0);
    iterator i;
    return i->second;
@@ -117,141 +126,144 @@ bool ListMap::empty( ) const
    return first==NULL;
 }
 
-// Zwraca iloœæ elementów w mapie.
+// Zwraca iloÂœÃ¦ elementÃ³w w mapie.
 ListMap::size_type ListMap::size( ) const
 {
-   ///@todo Zaimplementowaæ metode
+   ///@todo ZaimplementowaÃ¦ metode
    assert(0);
    return 0;
 }
 
-// Zwraza iloœæ elementów skojarzonych z kluczem key.
+// Zwraza iloÂœÃ¦ elementÃ³w skojarzonych z kluczem key.
 ListMap::size_type ListMap::count(const Key& _Key) const
 {
-   ///@todo Zaimplementowaæ metode
+   ///@todo ZaimplementowaÃ¦ metode
    return 1;  // this is not a multimap
 }
 
 // Usuwa element z mapy.
-// @returns iterator adresuj¹cy pierwszy element za usuwanym.
+// @returns iterator adresujÄ…cy pierwszy element za usuwanym.
 ListMap::iterator ListMap::erase(ListMap::iterator i)
 {
-   ///@todo Zaimplementowaæ metode
+   ///@todo ZaimplementowaÃ¦ metode
    assert(0);
    return end();
 }
 
-// Usuwa zakres elementów z mapy.
+// Usuwa zakres elementÃ³w z mapy.
 // Zakres jest zdefiniowany poprzez iteratory first i last
-// first jest okreœla pierwszy element do usuniêcia, a last okreœla element
-// po ostatnim usuniêtym elemencie.
-// @returns iterator adresuj¹cy pierwszy element za usuwanym.
+// first jest okreÂœla pierwszy element do usuniÃªcia, a last okreÂœla element
+// po ostatnim usuniÃªtym elemencie.
+// @returns iterator adresujÄ…cy pierwszy element za usuwanym.
 ListMap::iterator ListMap::erase(ListMap::iterator f, ListMap::iterator l)
 {
-   ///@todo Zaimplementowaæ metode
+   ///@todo ZaimplementowaÃ¦ metode
    assert(0);
    return end();
 }
 
 // Usuwa element z mapy.
-// @returns Iloœæ usuniêtych elementów.
-//          (nie jest to multimapa, wiêæ mo¿e byæ to wartoœæ 1 lub 0 )
+// @returns IloÅ›Ä‡ usuniÄ™tych elementÃ³w.
+//          (nie jest to multimapa, wiÄ™c moÅ¼e byÄ‡ to wartoÅ›Ä‡ 1 lub 0 )
 ListMap::size_type ListMap::erase(const Key& key)
 {
-   ///@todo Zaimplementowaæ metode
+   ///@todo ZaimplementowaÃ¦ metode
    assert(0);
    return 0;
 }
 
-// Usuniêcie wszystkich elementów z mapy.
+// UsuniÃªcie wszystkich elementÃ³w z mapy.
 void ListMap::clear( )
 {
-   ///@todo Zaimplementowaæ metode
+   ///@todo ZaimplementowaÃ¦ metode
    assert(0);
 }
 
-// Porównanie strukturalne map.
+// PorÃ³wnanie strukturalne map.
 // Czy reprezentacja danych jest identyczna.
-// Zwraca true jeœli wewnêtrzne struktury map s¹ identyczne.
+// Zwraca true jeÂœli wewnÃªtrzne struktury map sÄ… identyczne.
 bool ListMap::struct_eq(const ListMap& another) const
 {
-   ///@todo Zaimplementowaæ metode
+   ///@todo ZaimplementowaÃ¦ metode
    assert(0);
    return false;
 }
 
-// Porównanie informacyjne map.
-// Czy informacje trzymane w mapach s¹ identyczne.
-// Zwraca true jeœli mapy zwieraj¹ takie same pary klucz-wartoœæ.
+// PorÃ³wnanie informacyjne map.
+// Czy informacje trzymane w mapach sÄ… identyczne.
+// Zwraca true jeÂœli mapy zwierajÄ… takie same pary klucz-wartoÂœÃ¦.
 bool ListMap::info_eq(const ListMap& another) const
 {
-   ///@todo Zaimplementowaæ metode
+   ///@todo ZaimplementowaÃ¦ metode
    assert(0);
    return false;
 }
 
-// preincrementacja
+// preinkrementacja
 ListMap::const_iterator& ListMap::const_iterator::operator++()
 {
-   ///@todo Zaimplementowaæ metode
-   return *this;
+	node=node->next;
+	return *this;
 }
 
-// postincrementacja
+// postinkrementacja
 ListMap::const_iterator ListMap::const_iterator::operator++(int)
 {
-   ///@todo Zaimplementowaæ metode
-   return *this;
+	const_iterator akt=*this;
+	node=node->next;
+	return akt;
 }
 
+// preinkrementacja
 ListMap::const_iterator& ListMap::const_iterator::operator--()
 {
-   ///@todo Zaimplementowaæ metode
-   return *this;
+	node=node->prev;
+	return *this;
 }
 
-// postincrementacja
+// postinkrementacja
 ListMap::const_iterator ListMap::const_iterator::operator--(int)
 {
-   ///@todo Zaimplementowaæ metode
-   return *this;
+	const_iterator akt=*this;
+	node=node->prev;
+	return akt;
 }
 
-/// Zwraca iterator addresuj¹cy pierwszy element w mapie.
+/// Zwraca iterator addresujÄ…cy pierwszy element w mapie.
 ListMap::iterator ListMap::begin()
 {
-   ///@todo Zaimplementowaæ metode
-   return iterator(NULL);
+	///@todo ZaimplementowaÃ¦ metode
+	return iterator(first->next);
 }
 
-/// Zwraca iterator addresuj¹cy pierwszy element w mapie.
+/// Zwraca iterator addresujÄ…cy pierwszy element w mapie.
 ListMap::const_iterator ListMap::begin() const
 {
-   ///@todo Zaimplementowaæ metode
-   return iterator(NULL);
+   ///@todo ZaimplementowaÃ¦ metode
+   return iterator(first->next);
 }
 
-/// Zwraca iterator addresuj¹cy element za ostatnim w mapie.
+/// Zwraca iterator addresujÄ…cy element za ostatnim w mapie.
 ListMap::iterator ListMap::end()
 {
-   ///@todo Zaimplementowaæ metode
-   return iterator(NULL);
+   ///@todo ZaimplementowaÃ¦ metode
+   return iterator(first);
 }
 
-/// Zwraca iterator addresuj¹cy element za ostatnim w mapie.
+/// Zwraca iterator addresujÄ…cy element za ostatnim w mapie.
 ListMap::const_iterator ListMap::end() const
 {
-   ///@todo Zaimplementowaæ metode
-   return iterator(NULL);
+   ///@todo ZaimplementowaÃ¦ metode
+   return iterator(first);
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // SmallMap
 //////////////////////////////////////////////////////////////////////////////
 
-/// Przyk³ad map'y z implementacj¹ podobn¹ do std::map.
-/// To jest jedynie przyk³ad!!!
-/// Normalnie implementacja powinna opieraæ siê o drzewo lub tablicê haszuj¹c¹.
+/// PrzykÅ‚ad map'y z implementacjÄ… podobnÄ… do std::map.
+/// To jest jedynie przykÅ‚ad!!!
+/// Normalnie implementacja powinna opieraÃ¦ siÃª o drzewo lub tablicÃª haszujÄ…cÄ….
 template <class Key, class Val>
 class SmallMap
 {
@@ -267,7 +279,7 @@ public:
       }
    }
 
-   typedef std::pair<Key, Val>* iterator;   ///< Ka¿dy wskaŸnik jest te¿ iteratorem.
+   typedef std::pair<Key, Val>* iterator;   ///< KaÅ¼dy wskaÅºnik jest teÅ¼ iteratorem.
 
    iterator begin() { return tab; }
    iterator end() { return tab+2; }
@@ -293,7 +305,7 @@ public:
       //std::cout<<"Out of space! You should not put more than two Key-Value pairs into the SmallMap.\n";
       std::cerr<<"Out of space! You should not put more than two Key-Value pairs into the SmallMap.\n";
       //assert(0);
-      return val;   // Ma³o sensowne, ale to jest tylko przyk³¹d
+      return val;   // MaÅ‚o sensowne, ale to jest tylko przykÅ‚Ä…d
    }
 };
 
@@ -302,7 +314,7 @@ public:
 // Testy
 //////////////////////////////////////////////////////////////////////////////
 
-/// Funckcja pomocnicza do wypisania elementów.
+/// Funckcja pomocnicza do wypisania elementÃ³w.
 void print(const std::pair<int, std::string>& p)
 {
    std::cout<<p.first<<", "<<p.second<<std::endl;
@@ -310,24 +322,34 @@ void print(const std::pair<int, std::string>& p)
 
 #include <map>
 
-/// Testy u¿ytkownika
+// A typedef used by the test.
+//typedef std::map<int, std::string> TEST_MAP;
+//typedef SmallMap<int, std::string> TEST_MAP;
+typedef ListMap TEST_MAP;
+
+/// Testy uÅ¼ytkownika
 void test()
 {
-   // A typedef used by the test.
-   typedef std::map<int, std::string> TEST_MAP;
-   //typedef SmallMap<int, std::string> TEST_MAP;
-   //typedef ListMap TEST_MAP;
+	TEST_MAP m;
 
-   std::cout << "Testy uzytkownika" << std::endl;
+	std::cout << "Testy uzytkownika" << std::endl;
+	
+	/*
+	m[2] = "Merry";
+	m[4] = "Jane";
+	m[8] = "Korwin";
+	m[4] = "Magdalena";
 
-        TEST_MAP m;
-
-   m[2] = "Merry";
-   m[4] = "Jane";
-   m[8] = "Korwin";
-   m[4] = "Magdalena";
-
-   for_each(m.begin(), m.end(), print );
-   //system("PAUSE");
+	for_each(m.begin(), m.end(), print );
+	//system("PAUSE");
+	*/
+	
+	std::pair<ListMap::iterator, bool> n = m.insert(std::pair<int,std::string>(1, "SomeWord1"));
+	std::cout << "if inserted:" << n.second << std::endl;
+	print(*(n.first));
+	
+	//m.insert(std::pair<int,std::string>(2, "SomeWord2"));
+	//m.insert(std::pair<int,std::string>(3, "SomeWord3"));
+	//m.insert(std::pair<int,std::string>(1, "SomeWord4"));
+	for_each(m.begin(), m.end(), print );
 }
-

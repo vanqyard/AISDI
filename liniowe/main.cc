@@ -19,29 +19,47 @@ ALL RIGHTS RESERVED
 
 #include <iostream>
 
-#ifdef _SUNOS
-#include "/materialy/AISDI/liniowe/ListMap.h"
-#include "timer.h"
-#else
 #include "ListMap.h"
-#endif
+#include "timer.h"
 
 int CCount::count=0;
 
 int Test2();
 void test();
+void test_insert();
+void test_unsafe_insert();
+void test_find();
 
 int main()
 {
-   struct time_m czasstart;
-   double czas;
-   std::cout << "AISDI struktury liniowe: wchodze do funkcji main." << std::endl;
-   test();
-   // Biblioteka z bardziej rygorystyczna wersja tych testow bedzie udostepniona na nastepnych zajeciach.
-   czasstart = timer_start();
-   Test2();
-   czas = timer_stop( czasstart );
-   std::cout << std::endl << "Czas wykonania Test2() : " << czas << " s." << std::endl;
-   //system("PAUSE");
-   return EXIT_SUCCESS;
+	std::cout << "AISDI struktury liniowe: wchodze do funkcji main." << std::endl;
+	test();
+	return EXIT_SUCCESS;
+	
+	
+	
+	
+	
+	
+	
+	/*
+	std::cout << "Test unsafe_insert()" << std::endl;
+	test_insert();
+
+	std::cout << "Test find()" << std::endl;
+	test_insert();
+	*/
+	/*
+	struct time_m czasstart;
+	double czas;
+	std::cout << "AISDI struktury liniowe: wchodze do funkcji main." << std::endl;
+	test();
+	// Biblioteka z bardziej rygorystyczna wersja tych testow bedzie udostepniona na nastepnych zajeciach.
+	czasstart = timer_start();
+	Test2();
+	czas = timer_stop( czasstart );
+	std::cout << std::endl << "Czas wykonania Test2() : " << czas << " s." << std::endl;
+	//system("PAUSE");
+	return EXIT_SUCCESS;
+	*/ 
 }
