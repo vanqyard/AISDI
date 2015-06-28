@@ -56,7 +56,7 @@ ListMap::ListMap( const ListMap& m )
 
 ListMap::~ListMap()
 {
-	//clear();
+	clear();
 };
 
 // Wstawienie elementu do mapy.
@@ -66,9 +66,7 @@ ListMap::~ListMap()
 //          lub istniejący już w mapie element.
 std::pair<ListMap::iterator, bool> ListMap::insert(const std::pair<Key, Val>& entry)
 {
-	///@todo Uzupełnić kod
-	iterator i;
-	for(i=begin(); i!=end(); ++i)
+	for(iterator i=begin(); i!=end(); ++i)
 	{
 		if(i->first==entry.first)
 			return std::make_pair(i, (bool)false);
@@ -94,16 +92,24 @@ ListMap::iterator ListMap::unsafe_insert(const std::pair<Key, Val>& entry)
 // szukanemu kluczowi lub element za ostatnim gdy szukanego klucza brak w mapie.
 ListMap::iterator ListMap::find(const Key& k)
 {
-   ///@todo Zaimplementowaæ metode
-   assert(0);
-   return end();
+   	for(iterator i=begin(); i!=end(); ++i)
+	{
+		if(i->first==k)
+			return iterator(i);
+	}
+	
+	return end();
 }
 
 ListMap::const_iterator ListMap::find(const Key& k) const
 {
-   ///@todo Zaimplementowaæ metode
-   assert(0);
-   return end();
+	for(const_iterator i=begin(); i!=end(); ++i)
+	{
+		if(i->first==k)
+			return const_iterator(i);
+	}
+	
+	return end();
 }
 
 // Udostêpnia wartoæ powiązaną z kluczem key. Wstawia element do mapy jeli
@@ -112,15 +118,15 @@ ListMap::const_iterator ListMap::find(const Key& k) const
 ListMap::Val& ListMap::operator[](const Key& k)
 {
    ///@todo Zaimplementowaæ metode
-   assert(0);
-   iterator i;
-   return i->second;
+   //assert(0);
+	iterator i = insert(std::make_pair(k," ")).first;
+	return i->second;
 }
 
 // Sprawdzenie czy mapa jest pusta.
 bool ListMap::empty( ) const
 {
-   return first==NULL;
+   return first->next==first;
 }
 
 // Zwraca iloæ elementów w mapie.
@@ -142,9 +148,12 @@ ListMap::size_type ListMap::count(const Key& _Key) const
 // @returns iterator adresujący pierwszy element za usuwanym.
 ListMap::iterator ListMap::erase(ListMap::iterator i)
 {
-   ///@todo Zaimplementowaæ metode
-   assert(0);
-   return end();
+	///@todo Zaimplementowaæ metode
+	//assert(0);
+	i.node->prev->next = i.node->next;
+	i.node->next->prev = i.node->prev;
+	delete i.node;
+	return end();
 }
 
 // Usuwa zakres elementów z mapy.
@@ -154,9 +163,30 @@ ListMap::iterator ListMap::erase(ListMap::iterator i)
 // @returns iterator adresujący pierwszy element za usuwanym.
 ListMap::iterator ListMap::erase(ListMap::iterator f, ListMap::iterator l)
 {
-   ///@todo Zaimplementowaæ metode
-   assert(0);
-   return end();
+	///@todo Zaimplementowaæ metode
+	//assert(0);
+	//trzeba sprawdzic czy f < l
+	iterator start = find(f->first);
+	iterator finish = find(l->first);
+	if(start == end()) return end();
+	if(finish == end()) return end();
+	
+	if(start->first < finish->first) {
+		std::cout << "Valid erase" << std::endl;
+		iterator it = f;
+		iterator tmp;
+		
+		while(it!=l) {
+			tmp = it;
+			it++;
+			std::cout << "Erasing element: " << tmp->first << " " << tmp->second << std::endl;
+			erase(tmp);
+		}
+		return it;
+	} else {
+		std::cout << "Bad erase" << std::endl;
+		return end();
+	}
 }
 
 // Usuwa element z mapy.
@@ -164,16 +194,20 @@ ListMap::iterator ListMap::erase(ListMap::iterator f, ListMap::iterator l)
 //          (nie jest to multimapa, więc może być to wartość 1 lub 0 )
 ListMap::size_type ListMap::erase(const Key& key)
 {
-   ///@todo Zaimplementowaæ metode
-   assert(0);
-   return 0;
+	iterator i = find(key);
+	if(i != end()) {
+		erase(i);
+		return 1;
+	} else
+		return 0;
 }
 
 // Usuniêcie wszystkich elementów z mapy.
 void ListMap::clear( )
 {
    ///@todo Zaimplementowaæ metode
-   assert(0);
+   //assert(0);
+   erase(begin(), end());
 }
 
 // Porównanie strukturalne map.
@@ -229,28 +263,24 @@ ListMap::const_iterator ListMap::const_iterator::operator--(int)
 /// Zwraca iterator addresujący pierwszy element w mapie.
 ListMap::iterator ListMap::begin()
 {
-	///@todo Zaimplementowaæ metode
 	return iterator(first->next);
 }
 
 /// Zwraca iterator addresujący pierwszy element w mapie.
 ListMap::const_iterator ListMap::begin() const
 {
-   ///@todo Zaimplementowaæ metode
    return iterator(first->next);
 }
 
 /// Zwraca iterator addresujący element za ostatnim w mapie.
 ListMap::iterator ListMap::end()
 {
-   ///@todo Zaimplementowaæ metode
    return iterator(first);
 }
 
 /// Zwraca iterator addresujący element za ostatnim w mapie.
 ListMap::const_iterator ListMap::end() const
 {
-   ///@todo Zaimplementowaæ metode
    return iterator(first);
 }
 
@@ -344,10 +374,43 @@ void test()
 	//std::pair<ListMap::iterator, bool> n = m.insert(std::pair<int,std::string>(1, "SomeWord1"));
 	//std::cout << "if inserted:" << n.second << std::endl;
 	//print(*(n.first));
-
+	
+	std::cout << "Testing insert" << std::endl;
 	m.insert(std::pair<int,std::string>(1, "SomeWord1"));	
 	m.insert(std::pair<int,std::string>(2, "SomeWord2"));
 	m.insert(std::pair<int,std::string>(3, "SomeWord3"));
+	m.insert(std::pair<int,std::string>(4, "SomeWord4"));
+	m.insert(std::pair<int,std::string>(5, "SomeWord5"));	
 	m.insert(std::pair<int,std::string>(1, "SomeWord4"));
 	for_each(m.begin(), m.end(), print );
+	std::cout << "#################" << std::endl << std::endl;
+	
+	std::cout << "Testing find" << std::endl;	
+	std::cout << "Trying to find 3" << std::endl;
+	ListMap::iterator it = m.find(3);
+	print(*it);
+	std::cout << "#################" << std::endl << std::endl;
+
+	std::cout << "Testing erase" << std::endl; 
+	bool status = m.erase(3);
+	std::cout << "Erasing 3, status: " << status << std::endl;
+	for_each(m.begin(), m.end(), print );
+	std::cout << "#################" << std::endl << std::endl;
+	
+	std::cout << "Testing operator[]" << std::endl; 
+	m[100] = "testing";
+	for_each(m.begin(), m.end(), print );
+	std::cout << "#################" << std::endl << std::endl;
+
+	std::cout << "Testing erase by range" << std::endl; 
+	m.erase(m.find(2), m.find(5));
+	for_each(m.begin(), m.end(), print );
+	std::cout << "#################" << std::endl << std::endl;
+
+	/*
+	std::cout << "Testing clear" << std::endl; 
+	m.clear();
+	for_each(m.begin(), m.end(), print );
+	std::cout << "#################" << std::endl << std::endl;
+	*/
 }
