@@ -74,23 +74,20 @@ std::pair<ListMap::iterator, bool> ListMap::insert(const std::pair<Key, Val>& en
 			return std::make_pair(i, (bool)false);
 	}
 	
-	Node* new_node = new Node(entry);
-	first->next->prev = new_node;
-	new_node->next = first->next;
-	new_node->prev = first;
-	first->next = new_node;
-	return std::make_pair(iterator(new_node), true);
-	
-	//return std::make_pair(i, (bool)false);
+	return std::make_pair(unsafe_insert(entry), true);
 }
 
 // Wstawienie elementu do mapy.
 // Matoda zakłada, że w mapie nie wystêpuje element identyfikowany przez key
 ListMap::iterator ListMap::unsafe_insert(const std::pair<Key, Val>& entry)
 {
-   ///@todo Uzupełniæ kod
-   assert(0);
-   return iterator(first);
+	Node* new_node = new Node(entry);
+	first->next->prev = new_node;
+	new_node->next = first->next;
+	new_node->prev = first;
+	first->next = new_node;
+	
+	return iterator(new_node);	
 }
 
 // Zwraca iterator addresujący element w mapie dla którego klucz jest równy
@@ -344,12 +341,13 @@ void test()
 	//system("PAUSE");
 	*/
 	
-	std::pair<ListMap::iterator, bool> n = m.insert(std::pair<int,std::string>(1, "SomeWord1"));
-	std::cout << "if inserted:" << n.second << std::endl;
-	print(*(n.first));
-	
-	//m.insert(std::pair<int,std::string>(2, "SomeWord2"));
-	//m.insert(std::pair<int,std::string>(3, "SomeWord3"));
-	//m.insert(std::pair<int,std::string>(1, "SomeWord4"));
+	//std::pair<ListMap::iterator, bool> n = m.insert(std::pair<int,std::string>(1, "SomeWord1"));
+	//std::cout << "if inserted:" << n.second << std::endl;
+	//print(*(n.first));
+
+	m.insert(std::pair<int,std::string>(1, "SomeWord1"));	
+	m.insert(std::pair<int,std::string>(2, "SomeWord2"));
+	m.insert(std::pair<int,std::string>(3, "SomeWord3"));
+	m.insert(std::pair<int,std::string>(1, "SomeWord4"));
 	for_each(m.begin(), m.end(), print );
 }
